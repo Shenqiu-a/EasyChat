@@ -3,6 +3,9 @@ package com.eastchat.easychatloginservice;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * 登录注册服务启动类
+ */
 @SpringBootApplication
 public class EasychatLoginServiceApplication {
 

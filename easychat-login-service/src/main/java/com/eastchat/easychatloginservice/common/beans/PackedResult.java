@@ -6,7 +6,7 @@ import lombok.Data;
 public class PackedResult <T> {
 
     // 状态码
-    private Integer code;
+    private String code;
 
     // 提示信息
     private String message;
@@ -24,7 +24,7 @@ public class PackedResult <T> {
 
     public static <T> PackedResult<T> success(T data) {
         PackedResult<T> result = new PackedResult<>();
-        result.setCode(200);
+        result.setCode("200");
         result.setMessage("success");
         result.setData(data);
         return  result;
@@ -32,7 +32,7 @@ public class PackedResult <T> {
 
     public static <T> PackedResult<T> success(String msg, T data){
         PackedResult<T> result = new PackedResult<T>();
-        result.setCode(200);
+        result.setCode("200");
         result.setMessage(msg);
         result.setData(data);
         return result;
@@ -40,10 +40,10 @@ public class PackedResult <T> {
 
     // 失败的方法
     public static <T> PackedResult<T> error() {
-        return error(500,null);
+        return error("500",null);
     }
 
-    public static <T> PackedResult<T> error (Integer code,String msg) {
+    public static <T> PackedResult<T> error (String code,String msg) {
         PackedResult<T> result = new PackedResult<>();
         result.setCode(code);
         result.setMessage(msg);
