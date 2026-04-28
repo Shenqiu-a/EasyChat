@@ -2,6 +2,8 @@ package com.eastchat.easychatloginservice.common.beans;
 
 import com.eastchat.easychatloginservice.common.Exception.BizException;
 import com.eastchat.easychatloginservice.common.enums.ErrorCode;
+import com.eastchat.easychatloginservice.common.enums.ErrorCodeInterface;
+
 import java.util.*;
 
 /**
@@ -22,7 +24,7 @@ public class PackedAssert {
         }
     }
 
-    public static void isTrue(boolean condition, ErrorCode errorCode) {
+    public static void isTrue(boolean condition, ErrorCodeInterface errorCode) {
         if (!condition) {
             throw new BizException(errorCode.getCode(), errorCode.getMsg());
         }
@@ -34,7 +36,7 @@ public class PackedAssert {
         }
     }
 
-    public static void isFalse(boolean condition, ErrorCode errorCode) {
+    public static void isFalse(boolean condition, ErrorCodeInterface errorCode) {
         if (condition) {
             throw new BizException(errorCode.getCode(), errorCode.getMsg());
         }
@@ -49,7 +51,7 @@ public class PackedAssert {
         }
     }
 
-    public static void isNull(Object object, ErrorCode errorCode) {
+    public static void isNull(Object object, ErrorCodeInterface errorCode) {
         if (object != null) {
             throw new BizException(errorCode.getCode(), errorCode.getMsg());
         }
@@ -60,7 +62,7 @@ public class PackedAssert {
             throw new BizException(message);
         }
     }
-    public static void isNotNull(Object object, ErrorCode errorCode) {
+    public static void isNotNull(Object object, ErrorCodeInterface errorCode) {
         if (object == null) {
             throw new BizException(errorCode.getCode(), errorCode.getMsg());
         }
@@ -75,7 +77,7 @@ public class PackedAssert {
         }
     }
 
-    public static void isBlank(String str, ErrorCode errorCode) {
+    public static void isBlank(String str, ErrorCodeInterface errorCode) {
         if (str != null && !str.isEmpty()) {
             throw new BizException(errorCode.getCode(), errorCode.getMsg());
         }
@@ -87,7 +89,7 @@ public class PackedAssert {
         }
     }
 
-    public static void isNotBlank(String str, ErrorCode errorCode) {
+    public static void isNotBlank(String str, ErrorCodeInterface errorCode) {
         if (str == null || str.isEmpty()) {
             throw new BizException(errorCode.getCode(), errorCode.getMsg());
         }
@@ -102,7 +104,7 @@ public class PackedAssert {
         }
     }
 
-    public static void notEmpty(Collection<?> collection,ErrorCode errorCode) {
+    public static void notEmpty(Collection<?> collection,ErrorCodeInterface errorCode) {
         if (collection == null || collection.isEmpty()) {
             throw new BizException(errorCode.getCode(), errorCode.getMsg());
         }
@@ -114,7 +116,7 @@ public class PackedAssert {
         }
     }
 
-    public static void notEmpty(Map<?,?> map, ErrorCode errorCode) {
+    public static void notEmpty(Map<?,?> map, ErrorCodeInterface errorCode) {
         if (map == null || map.isEmpty()) {
             throw new BizException(errorCode.getCode(), errorCode.getMsg());
         }
@@ -142,7 +144,7 @@ public class PackedAssert {
         throw new BizException(message);
     }
 
-    public static void fail(ErrorCode errorCode) {
+    public static void fail(ErrorCodeInterface errorCode) {
         throw new BizException(errorCode.getCode(), errorCode.getMsg());
     }
 

@@ -1,5 +1,7 @@
 package com.eastchat.easychatloginservice.common.Exception;
 
+import com.eastchat.easychatloginservice.common.enums.ErrorCode;
+
 /**
  * 功能：自定义业务异常
  * 作者：yml
@@ -18,6 +20,11 @@ public class BizException extends RuntimeException {
     public BizException(String code, String message) {
         super(message);
         this.code = code;
+    }
+
+    public BizException(ErrorCode errorCode) {
+        super(errorCode.getMsg());
+        this.code = errorCode.getCode();
     }
 
     public String getCode() {

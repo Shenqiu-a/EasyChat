@@ -1,10 +1,9 @@
 package com.eastchat.easychatloginservice.common.enums;
 
-public enum ErrorCode implements ErrorCodeInterface{
-    /**
-     * 错误码
+public enum LoginErrorCode implements ErrorCodeInterface{
+    /***
+     * 用户异常CODE:102XXX
      */
-    SUCCESS("1001", "成功"),
     USER_NOT_EXIST("1002", "用户不存在"),
     USER_EXIST("1003", "用户已存在"),
     USER_ACCOUNT_IS_NULL("1004", "用户账号为空"),
@@ -17,9 +16,10 @@ public enum ErrorCode implements ErrorCodeInterface{
     USER_CODE_EXPIRED("1011", "用户验证码已过期");
 
     private final String code;
+
     private final String msg;
 
-    ErrorCode(String code, String msg) {
+    LoginErrorCode(String code, String msg) {
         this.code = code;
         this.msg = msg;
     }

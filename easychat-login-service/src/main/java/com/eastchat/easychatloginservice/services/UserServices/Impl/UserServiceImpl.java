@@ -26,9 +26,9 @@ public class UserServiceImpl implements UserService {
         String cellPhoneNumber = request.getCellPhone();
         String email = request.getEmail();
         if (cellPhoneNumber != null && !PhoneNumberValidator.isValida(cellPhoneNumber)) {
-            PackedAssert.fail(ErrorCode.USER_MOBILE_ERROR);
+            throw new BizException(ErrorCode.USER_MOBILE_ERROR);
         } else if (email != null && !EmailValidator.getInstance().isValid(email)){
-            PackedAssert.fail(ErrorCode.USER_EMAIL_ERROR);
+            throw new BizException(ErrorCode.USER_EMAIL_ERROR);
         }
         return null;
     }
