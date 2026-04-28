@@ -12,7 +12,7 @@ import lombok.Data;
 public class UserLoginInfoRequest {
 
     @Schema(description = "手机号")
-    private String mobile;
+    private String cellPhone;
 
     @Schema(description = "邮箱")
     private String email;
