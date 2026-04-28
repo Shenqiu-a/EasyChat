@@ -1,7 +1,7 @@
 package com.eastchat.easychatloginservice.common.Exception;
 
 /**
- * 功能：
+ * 功能：自定义业务异常
  * 作者：yml
  * 日期：2026/4/2811:45
  */
