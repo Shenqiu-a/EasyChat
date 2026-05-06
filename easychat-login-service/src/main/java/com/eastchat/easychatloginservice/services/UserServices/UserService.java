@@ -1,6 +1,7 @@
 package com.eastchat.easychatloginservice.services.UserServices;
 
 import com.eastchat.easychatloginservice.domain.request.UserLoginInfoRequest;
+import com.eastchat.easychatloginservice.domain.request.UserRegisterInfoRequest;
 import com.eastchat.easychatloginservice.domain.vo.UserBaseResponseVo;
 
 /**
@@ -11,4 +12,6 @@ import com.eastchat.easychatloginservice.domain.vo.UserBaseResponseVo;
 
 public interface UserService {
     UserBaseResponseVo login(UserLoginInfoRequest request);
+
+    String register(UserRegisterInfoRequest request);
 }

@@ -1,14 +1,15 @@
 package com.eastchat.easychatloginservice;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * 登录注册服务启动类
  */
+@MapperScan("com.eastchat.easychatloginservice.mapper")
 @SpringBootApplication
 public class EasychatLoginServiceApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(EasychatLoginServiceApplication.class, args);
         StringBuilder sb = new StringBuilder();

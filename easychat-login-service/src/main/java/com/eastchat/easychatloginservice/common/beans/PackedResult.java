@@ -38,6 +38,10 @@ public class PackedResult <T> {
         return result;
     }
 
+    public static <T> PackedResult<T> success(String msg){
+        return success(msg,null);
+    }
+
     // 失败的方法
     public static <T> PackedResult<T> error() {
         return error("500",null);
