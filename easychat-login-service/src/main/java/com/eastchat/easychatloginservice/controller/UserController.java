@@ -48,7 +48,9 @@ public class UserController {
     public PackedResult<String> register(@RequestBody UserRegisterInfoRequest request) {
         String accountInfo = request.getCellPhone() != null ? request.getCellPhone() : request.getEmail();
         PackedAssert.isNotBlank(accountInfo, RegisterErrorCode.USER_ACCOUNT_IS_NULL);
-        request.setUsername(accountInfo);
+        if (request.getUsername() == null) {
+            request.setUsername(accountInfo);
+        }
         // todo 验证码处理
         return PackedResult.success(userService.register(request));
     }

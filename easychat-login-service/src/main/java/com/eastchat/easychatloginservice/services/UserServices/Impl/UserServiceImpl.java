@@ -4,6 +4,7 @@ import com.eastchat.easychatloginservice.common.Exception.BizException;
 import com.eastchat.easychatloginservice.common.beans.PackedAssert;
 import com.eastchat.easychatloginservice.common.enums.LoginErrorCode;
 import com.eastchat.easychatloginservice.common.enums.RegisterErrorCode;
+import com.eastchat.easychatloginservice.common.utils.encryption.AESUtil;
 import com.eastchat.easychatloginservice.common.utils.encryption.BcryptUtil;
 import com.eastchat.easychatloginservice.common.utils.PhoneNumberValidator;
 import com.eastchat.easychatloginservice.common.utils.encryption.HashUtilSha256;
@@ -31,6 +32,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private final String SALT = "48e29h#&TY$*(H";
+
     @Resource
     private UserInfoMapper userInfoMapper;
 
@@ -44,7 +47,15 @@ public class UserServiceImpl implements UserService {
         } else if (email != null && !EmailValidator.getInstance().isValid(email)){
             throw new BizException(LoginErrorCode.USER_EMAIL_ERROR);
         }
-        return null;
+        // 验证用户名和密码
+        UserInfoPO userInfoPO = userInfoMapper.selectByPhone(HashUtilSha256.sha256(cellPhoneNumber + SALT));
+        if (userInfoPO == null) {
+            throw new BizException(LoginErrorCode.USER_NOT_EXIST);
+        }
+        if (!BcryptUtil.checkPassword(request.getPassword(), userInfoPO.getPassword())){
+            throw new BizException(LoginErrorCode.USER_PASSWORD_ERROR);
+        }
+        return returnMethod(userInfoPO);
     }
 
     @Override
@@ -54,16 +65,22 @@ public class UserServiceImpl implements UserService {
 
         String cellPhoneNumber = request.getCellPhone();
         String email = request.getEmail();
-        String nickName = "nick_" + UUID.randomUUID().toString().substring(0,7);
+        String nickName = null;
+        if (request.getUsername() != null) {
+            nickName = request.getUsername();
+        } else {
+            nickName = "nick_" + UUID.randomUUID().toString().substring(0,7);
+        }
+
 
         log.info("\nNickName: {}\n",nickName);
 
-        String phoneBcrypt = BcryptUtil.encryptionPassword(cellPhoneNumber);
-        String emailBcrypt = BcryptUtil.encryptionPassword(email);
+        String phoneEncrypt = AESUtil.encryption(cellPhoneNumber);
+        String emailEncrypt = AESUtil.encryption(email);
         String passwordBcrypt = BcryptUtil.encryptionPassword(password);
 
-        String phoneSha = HashUtilSha256.sha256(cellPhoneNumber);
-        String emailSha = HashUtilSha256.sha256(email);
+        String phoneSha = HashUtilSha256.sha256(cellPhoneNumber + SALT);
+        String emailSha = HashUtilSha256.sha256(email + SALT);
 
         // 先查后插
         if (userInfoMapper.selectByPhone(phoneSha) != null || userInfoMapper.selectByEmail(emailSha) != null) {
@@ -79,8 +96,8 @@ public class UserServiceImpl implements UserService {
         userInfoPo.setStatus("1");
         userInfoPo.setNickName(nickName);
         userInfoPo.setPassword(passwordBcrypt);
-        userInfoPo.setPhoneEncrypt(phoneBcrypt);
-        userInfoPo.setEmailEncrypt(emailBcrypt);
+        userInfoPo.setPhoneEncrypt(phoneEncrypt);
+        userInfoPo.setEmailEncrypt(emailEncrypt);
         userInfoPo.setPhoneHash(phoneSha);
         userInfoPo.setEmailHash(emailSha);
         userInfoPo.setCreateBy("root");
@@ -93,5 +110,14 @@ public class UserServiceImpl implements UserService {
         return "注册成功";
     }
 
-
+    private UserBaseResponseVo returnMethod(UserInfoPO userInfoPO) {
+        UserBaseResponseVo userBaseResponseVo = new UserBaseResponseVo();
+        // TODO 返回用户信息
+        userBaseResponseVo.setUserId(userInfoPO.getUserId());
+        userBaseResponseVo.setUserName(userInfoPO.getUserName());
+        userBaseResponseVo.setNickName(userInfoPO.getNickName());
+        userBaseResponseVo.setCellPhone(AESUtil.encryption(userInfoPO.getPhoneHash()));
+        userBaseResponseVo.setEmail(AESUtil.encryption(userInfoPO.getEmailHash()));
+        return userBaseResponseVo;
+    }
 }

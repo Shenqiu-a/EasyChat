@@ -13,7 +13,7 @@ import javax.crypto.spec.SecretKeySpec;
  */
 
 public class AESUtil {
-    private static final String AES_KEY = "EasyChatLoginService";
+    private static final String AES_KEY = "1234567890123456";
 
     public static String encryption(String data) {
         try {
