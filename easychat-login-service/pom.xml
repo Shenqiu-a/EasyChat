@@ -97,6 +97,17 @@
             <artifactId>mysql-connector-j</artifactId>
         </dependency>
 
+<!--    Redisson 和 SpringBoot 连接 redis    -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-spring-boot-starter</artifactId>
+            <version>3.27.2</version>
+        </dependency>
+
     </dependencies>
 
     <build>
