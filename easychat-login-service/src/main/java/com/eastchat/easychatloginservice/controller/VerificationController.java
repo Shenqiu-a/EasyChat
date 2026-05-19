@@ -7,10 +7,7 @@ import com.eastchat.easychatloginservice.services.VerificationCode.VerificationS
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 功能：验证码
@@ -26,13 +23,13 @@ public class VerificationController {
     @Resource
     VerificationService verificationService;
 
-    @GetMapping("/getCaptchaWord")
+    @PostMapping("/getCaptchaWord")
     public PackedResult<VerificationVo> get(@RequestBody VerificationRequest verificationRequest) {
         VerificationVo verificationResult = verificationService.get(verificationRequest.getBusinessType());
         return PackedResult.success(verificationResult);
     }
 
-    @GetMapping("/refresh")
+    @PostMapping("/refresh")
     public PackedResult<VerificationVo> refresh(@RequestBody VerificationRequest verificationRequest) {
         VerificationVo verificationResult = verificationService.refresh(verificationRequest.getCaptchaId(), verificationRequest.getBusinessType());
         return PackedResult.success(verificationResult);
