@@ -1,13 +1,14 @@
 package com.eastchat.easychatloginservice.controller;
 
 import com.eastchat.easychatloginservice.common.beans.PackedResult;
+import com.eastchat.easychatloginservice.domain.request.VerificationRequest;
 import com.eastchat.easychatloginservice.domain.vo.VerificationVo;
 import com.eastchat.easychatloginservice.services.VerificationCode.VerificationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,8 +27,14 @@ public class VerificationController {
     VerificationService verificationService;
 
     @GetMapping("/getCaptchaWord")
-    public PackedResult<VerificationVo> get() {
-        VerificationVo verificationResult = verificationService.get();
+    public PackedResult<VerificationVo> get(@RequestBody VerificationRequest verificationRequest) {
+        VerificationVo verificationResult = verificationService.get(verificationRequest.getBusinessType());
+        return PackedResult.success(verificationResult);
+    }
+
+    @GetMapping("/refresh")
+    public PackedResult<VerificationVo> refresh(@RequestBody VerificationRequest verificationRequest) {
+        VerificationVo verificationResult = verificationService.refresh(verificationRequest.getCaptchaId(), verificationRequest.getBusinessType());
         return PackedResult.success(verificationResult);
     }
 }

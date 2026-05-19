@@ -12,8 +12,9 @@ public enum LoginErrorCode implements ErrorCodeInterface{
     USER_MOBILE_ERROR("101006", "用户手机号不合法"),
     USER_EMAIL_ERROR("101007", "用户邮箱不合法"),
     USER_CODE_IS_NULL("101008", "用户验证码为空"),
-    USER_CODE_ERROR("101009", "用户验证码错误"),
-    USER_CODE_EXPIRED("101010", "用户验证码已过期");
+    USER_CODE_ERROR("101009", "用户验证码错误或已过期"),
+    USER_CODE_EXPIRED("101010", "用户验证码已过期"),
+    USER_CODE_ID_IS_NULL("101011", "用户验证码已ID为空");
 
     private final String code;
 

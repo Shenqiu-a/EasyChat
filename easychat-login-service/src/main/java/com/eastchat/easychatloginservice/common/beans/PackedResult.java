@@ -47,6 +47,14 @@ public class PackedResult <T> {
         return error("500",null);
     }
 
+    public static <T> PackedResult<T> error (T data) {
+        PackedResult<T> result = new PackedResult<>();
+        result.setCode("500");
+        result.setMessage("error");
+        result.setData(data);
+        return result;
+    }
+
     public static <T> PackedResult<T> error (String code,String msg) {
         PackedResult<T> result = new PackedResult<>();
         result.setCode(code);

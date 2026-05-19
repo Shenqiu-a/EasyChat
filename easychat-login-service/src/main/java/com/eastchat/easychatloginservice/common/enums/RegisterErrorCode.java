@@ -16,7 +16,9 @@ public enum RegisterErrorCode implements ErrorCodeInterface{
     USER_REGISTER_CODE_ERROR("102004", "用户注册验证码错误"),
     USER_REGISTER_CODE_EXPIRED("102005", "用户注册验证码已过期"),
     USER_PASSWORD_IS_NULL("102006","用户密码不能为空"),
-    USER_ACCOUNT_IS_NULL("102007","用户手机号/邮箱不能为空");
+    USER_ACCOUNT_IS_NULL("102007","用户手机号/邮箱不能为空"),
+    USER_REGISTER_CODE_IS_NULL("102007","用户注册验证码不能为空"),
+    USER_REGISTER_CODE_ID_IS_NULL("102007","用户注册验证码ID不能为空"),;
 
     private final String code;
     private final String msg;

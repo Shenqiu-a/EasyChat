@@ -9,6 +9,7 @@ import com.eastchat.easychatloginservice.domain.request.UserLoginInfoRequest;
 import com.eastchat.easychatloginservice.domain.request.UserRegisterInfoRequest;
 import com.eastchat.easychatloginservice.domain.vo.UserBaseResponseVo;
 import com.eastchat.easychatloginservice.services.UserServices.UserService;
+import com.eastchat.easychatloginservice.services.VerificationCode.VerificationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,9 @@ public class UserController {
     @Resource
     UserService userService;
 
+    @Resource
+    VerificationService verificationService;
+
     /**
      * 功能：用户登录
      */
@@ -35,9 +39,14 @@ public class UserController {
         String accountInfo = request.getCellPhone() != null ? request.getCellPhone() : request.getEmail();
         PackedAssert.isNotBlank(accountInfo, LoginErrorCode.USER_ACCOUNT_IS_NULL);
         PackedAssert.isNotBlank(request.getPassword(), LoginErrorCode.USER_PASSWORD_IS_NULL);
-        PackedAssert.isNotBlank(request.getCode(),LoginErrorCode.USER_CODE_IS_NULL);
-        // todo 验证码处理
-
+        PackedAssert.isNotNull(request.getCaptcha(),LoginErrorCode.USER_CODE_IS_NULL);
+        PackedAssert.isNotBlank(request.getCaptchaId(),LoginErrorCode.USER_CODE_ID_IS_NULL);
+        Integer checkCode = verificationService.check(request.getCaptchaId(), request.getCaptcha(), 1);
+        if(checkCode == 1) {
+            return PackedResult.error(LoginErrorCode.USER_CODE_ERROR.getCode(), LoginErrorCode.USER_CODE_ERROR.getMsg());
+        } else if (checkCode == 2) {
+            return PackedResult.error(LoginErrorCode.USER_CODE_EXPIRED.getCode(), LoginErrorCode.USER_CODE_EXPIRED.getMsg());
+        }
         return PackedResult.success(userService.login(request));
     }
 
@@ -48,10 +57,17 @@ public class UserController {
     public PackedResult<String> register(@RequestBody UserRegisterInfoRequest request) {
         String accountInfo = request.getCellPhone() != null ? request.getCellPhone() : request.getEmail();
         PackedAssert.isNotBlank(accountInfo, RegisterErrorCode.USER_ACCOUNT_IS_NULL);
+        PackedAssert.isNotNull(request.getCaptcha(),RegisterErrorCode.USER_REGISTER_CODE_IS_NULL);
+        PackedAssert.isNotBlank(request.getCaptchaId(),RegisterErrorCode.USER_REGISTER_CODE_ID_IS_NULL);
         if (request.getUsername() == null) {
             request.setUsername(accountInfo);
         }
-        // todo 验证码处理
+        Integer checkCode = verificationService.check(request.getCaptchaId(), request.getCaptcha(), 2);
+        if (checkCode == 1) {
+            return PackedResult.error(RegisterErrorCode.USER_REGISTER_CODE_ERROR.getCode(), RegisterErrorCode.USER_REGISTER_CODE_ERROR.getMsg());
+        } else if (checkCode == 2) {
+            return PackedResult.error(RegisterErrorCode.USER_REGISTER_CODE_EXPIRED.getCode(), RegisterErrorCode.USER_REGISTER_CODE_EXPIRED.getMsg());
+        }
         return PackedResult.success(userService.register(request));
     }
 }

@@ -1,11 +1,16 @@
 package com.eastchat.easychatloginservice.services.VerificationCode.Impl;
 
+import com.eastchat.easychatloginservice.common.enums.LoginErrorCode;
 import com.eastchat.easychatloginservice.domain.vo.VerificationVo;
 import com.eastchat.easychatloginservice.services.VerificationCode.VerificationService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+
 /**
  * 功能：验证码
  * 作者：yml
@@ -27,8 +32,14 @@ public class VerificationServiceImpl implements VerificationService {
             List.of("泰来","否往","泰否","来往")
     );
 
+    @Resource
+    RedisTemplate redisTemplate;
+
+    /**
+     * 功能：获取验证码
+     */
     @Override
-    public VerificationVo get() {
+    public VerificationVo get(Integer businessType) {
         String captchaId = UUID.randomUUID().toString();
         VerificationVo verificationVo = new VerificationVo();
         Random random = new Random();
@@ -44,9 +55,18 @@ public class VerificationServiceImpl implements VerificationService {
         correctAnswer.add(captchaWord.get(0));
         correctAnswer.add(captchaWord.get(1));
         log.info("正确答案已组装好");
-
-        // TODO 正确答案存入redis
-
+        String BizCaptchaId = null;
+        if (businessType == 1) {
+            BizCaptchaId = "captchaId:login:" + captchaId;
+        } else if (businessType == 2) {
+            BizCaptchaId = "captchaId:register:" + captchaId;
+        }
+        redisTemplate.opsForValue().set(
+                BizCaptchaId,
+                correctAnswer,
+                120L,
+                TimeUnit.MINUTES
+        );
         log.info("已存入Redis");
 
         // 返回
@@ -56,5 +76,57 @@ public class VerificationServiceImpl implements VerificationService {
         verificationVo.setExpireTime(120L);
         log.info("已返回验证码");
         return verificationVo;
+    }
+
+    /**
+     * 功能：验证码验证
+     */
+    @Override
+    public Integer check(String captchaId, List<String> captcha, Integer businessType) {
+        log.info("开始验证验证码");
+        String bizCaptchaId = null;
+        if (businessType == 1) {
+            bizCaptchaId = "captchaId:login:" + captchaId;
+        } else if (businessType == 2) {
+            bizCaptchaId = "captchaId:register:" + captchaId;
+        }
+        Object correctAnswerObj = redisTemplate.opsForValue().get(bizCaptchaId);
+        if (correctAnswerObj == null) {
+            log.error(LoginErrorCode.USER_CODE_EXPIRED.getMsg());
+            return 2;
+        }
+        List<String> correctAnswer = (List<String>) correctAnswerObj;
+        if (correctAnswer.equals(captcha)) {
+            log.info("验证成功");
+            return 0;
+        } else {
+            log.error(LoginErrorCode.USER_CODE_ERROR.getMsg());
+        }
+        if (redisTemplate.delete("captchaId:string:" + captchaId)) {
+            log.info("已删除验证码");
+        } else {
+            log.error("删除验证码失败");
+        }
+        return 1;
+    }
+
+    /**
+     * 功能：刷新验证码
+     */
+    @Override
+    public VerificationVo refresh(String captchaId, Integer businessType    ) {
+        log.info("开始刷新验证码");
+        String bizCaptchaId = null;
+        if (businessType == 1) {
+            bizCaptchaId = "captchaId:login:" + captchaId;
+        } else if (businessType == 2) {
+            bizCaptchaId = "captchaId:register:" + captchaId;
+        }
+        if(redisTemplate.delete(bizCaptchaId)) {
+            log.info("已删除验证码");
+        } else {
+            log.error("删除验证码失败");
+        }
+        return get(businessType);
     }
 }

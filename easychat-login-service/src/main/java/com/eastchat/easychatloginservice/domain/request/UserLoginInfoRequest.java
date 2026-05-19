@@ -2,6 +2,7 @@ package com.eastchat.easychatloginservice.domain.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import java.util.*;
 
 /**
  * 功能：用户登录请求参数
@@ -20,6 +21,9 @@ public class UserLoginInfoRequest {
     @Schema(description = "密码")
     private String password;
 
+    @Schema(description = "验证码Id")
+    private String captchaId;
+
     @Schema(description = "验证码")
-    private String code;
+    private List<String> captcha;
 }
