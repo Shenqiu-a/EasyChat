@@ -102,10 +102,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
+<!--    redisson 的 starter 自动装配有问题，所以没有导入 redisson 的 starter    -->
         <dependency>
             <groupId>org.redisson</groupId>
-            <artifactId>redisson-spring-boot-starter</artifactId>
-            <version>3.27.2</version>
+            <artifactId>redisson</artifactId>
+            <version>3.52.0</version>
         </dependency>
 
     </dependencies>
