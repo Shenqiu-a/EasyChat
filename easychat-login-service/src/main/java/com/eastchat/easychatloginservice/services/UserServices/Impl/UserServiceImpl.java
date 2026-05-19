@@ -47,8 +47,14 @@ public class UserServiceImpl implements UserService {
         } else if (email != null && !EmailValidator.getInstance().isValid(email)){
             throw new BizException(LoginErrorCode.USER_EMAIL_ERROR);
         }
-        // 验证用户名和密码
-        UserInfoPO userInfoPO = userInfoMapper.selectByPhone(HashUtilSha256.sha256(cellPhoneNumber + SALT));
+        UserInfoPO userInfoPO = null;
+        if (cellPhoneNumber != null) {
+            userInfoPO = userInfoMapper.selectByPhone(HashUtilSha256.sha256(cellPhoneNumber + SALT));
+        }
+        if (email != null) {
+            userInfoPO = userInfoMapper.selectByEmail(HashUtilSha256.sha256(email + SALT));
+        }
+
         if (userInfoPO == null) {
             throw new BizException(LoginErrorCode.USER_NOT_EXIST);
         }
