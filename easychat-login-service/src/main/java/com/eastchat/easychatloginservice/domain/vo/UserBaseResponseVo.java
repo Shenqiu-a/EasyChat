@@ -43,4 +43,10 @@ public class UserBaseResponseVo {
     @Schema(description = "个性签名")
     private String signature;
 
+    @Schema(description = "验证Token")
+    private String accessToken;
+
+    @Schema(description = "刷新Token")
+    private String refreshToken;
+
 }

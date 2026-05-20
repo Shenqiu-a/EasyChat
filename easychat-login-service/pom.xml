@@ -108,6 +108,12 @@
             <artifactId>redisson</artifactId>
             <version>3.52.0</version>
         </dependency>
+<!--    JWT    -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.12.7</version>
+        </dependency>
 
     </dependencies>
 

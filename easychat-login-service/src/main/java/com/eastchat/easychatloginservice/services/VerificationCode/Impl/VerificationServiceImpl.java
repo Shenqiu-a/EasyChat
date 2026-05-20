@@ -98,16 +98,16 @@ public class VerificationServiceImpl implements VerificationService {
         List<String> correctAnswer = (List<String>) correctAnswerObj;
         if (correctAnswer.equals(captcha)) {
             log.info("验证成功");
-            return 0;
         } else {
             log.error(LoginErrorCode.USER_CODE_ERROR.getMsg());
+            return 1;
         }
-        if (redisTemplate.delete("captchaId:string:" + captchaId)) {
+        if (redisTemplate.delete(bizCaptchaId)) {
             log.info("已删除验证码");
         } else {
             log.error("删除验证码失败");
         }
-        return 1;
+        return 0;
     }
 
     /**

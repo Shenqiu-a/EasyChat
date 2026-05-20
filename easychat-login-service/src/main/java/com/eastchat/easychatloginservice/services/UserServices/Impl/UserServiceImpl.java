@@ -4,6 +4,7 @@ import com.eastchat.easychatloginservice.common.Exception.BizException;
 import com.eastchat.easychatloginservice.common.beans.PackedAssert;
 import com.eastchat.easychatloginservice.common.enums.LoginErrorCode;
 import com.eastchat.easychatloginservice.common.enums.RegisterErrorCode;
+import com.eastchat.easychatloginservice.common.utils.JwtUtils;
 import com.eastchat.easychatloginservice.common.utils.encryption.AESUtil;
 import com.eastchat.easychatloginservice.common.utils.encryption.BcryptUtil;
 import com.eastchat.easychatloginservice.common.utils.PhoneNumberValidator;
@@ -61,7 +62,13 @@ public class UserServiceImpl implements UserService {
         if (!BcryptUtil.checkPassword(request.getPassword(), userInfoPO.getPassword())){
             throw new BizException(LoginErrorCode.USER_PASSWORD_ERROR);
         }
-        return returnMethod(userInfoPO);
+        // TODO 签发 Token
+        JwtUtils jwtUtils = new JwtUtils();
+        String accessToken = jwtUtils.generateAccessToken(userInfoPO.getUserId());
+        String refreshToken = jwtUtils.generateRefreshToken(userInfoPO.getUserId());
+        log.info("\naccessToken: {}, \nrefreshToken: {}", accessToken, refreshToken);
+
+        return returnMethod(userInfoPO, accessToken, refreshToken);
     }
 
     @Override
@@ -116,7 +123,7 @@ public class UserServiceImpl implements UserService {
         return "注册成功";
     }
 
-    private UserBaseResponseVo returnMethod(UserInfoPO userInfoPO) {
+    private UserBaseResponseVo returnMethod(UserInfoPO userInfoPO,String accessToken, String refreshToken) {
         UserBaseResponseVo userBaseResponseVo = new UserBaseResponseVo();
         // TODO 返回用户信息
         userBaseResponseVo.setUserId(userInfoPO.getUserId());
@@ -124,6 +131,8 @@ public class UserServiceImpl implements UserService {
         userBaseResponseVo.setNickName(userInfoPO.getNickName());
         userBaseResponseVo.setCellPhone(AESUtil.encryption(userInfoPO.getPhoneHash()));
         userBaseResponseVo.setEmail(AESUtil.encryption(userInfoPO.getEmailHash()));
+        userBaseResponseVo.setAccessToken(accessToken);
+        userBaseResponseVo.setRefreshToken(refreshToken);
         return userBaseResponseVo;
     }
 }
