@@ -41,12 +41,6 @@ public class UserController {
         PackedAssert.isNotBlank(request.getPassword(), LoginErrorCode.USER_PASSWORD_IS_NULL);
         PackedAssert.isNotNull(request.getCaptcha(),LoginErrorCode.USER_CODE_IS_NULL);
         PackedAssert.isNotBlank(request.getCaptchaId(),LoginErrorCode.USER_CODE_ID_IS_NULL);
-        Integer checkCode = verificationService.check(request.getCaptchaId(), request.getCaptcha(), 1);
-        if(checkCode == 1) {
-            return PackedResult.error(LoginErrorCode.USER_CODE_ERROR.getCode(), LoginErrorCode.USER_CODE_ERROR.getMsg());
-        } else if (checkCode == 2) {
-            return PackedResult.error(LoginErrorCode.USER_CODE_EXPIRED.getCode(), LoginErrorCode.USER_CODE_EXPIRED.getMsg());
-        }
         return PackedResult.success(userService.login(request));
     }
 
@@ -61,12 +55,6 @@ public class UserController {
         PackedAssert.isNotBlank(request.getCaptchaId(),RegisterErrorCode.USER_REGISTER_CODE_ID_IS_NULL);
         if (request.getUsername() == null) {
             request.setUsername(accountInfo);
-        }
-        Integer checkCode = verificationService.check(request.getCaptchaId(), request.getCaptcha(), 2);
-        if (checkCode == 1) {
-            return PackedResult.error(RegisterErrorCode.USER_REGISTER_CODE_ERROR.getCode(), RegisterErrorCode.USER_REGISTER_CODE_ERROR.getMsg());
-        } else if (checkCode == 2) {
-            return PackedResult.error(RegisterErrorCode.USER_REGISTER_CODE_EXPIRED.getCode(), RegisterErrorCode.USER_REGISTER_CODE_EXPIRED.getMsg());
         }
         return PackedResult.success(userService.register(request));
     }

@@ -28,6 +28,11 @@ public class BizException extends RuntimeException {
         this.code = errorCode.getCode();
     }
 
+    public BizException(String message,Exception e) {
+        super(message,e);
+        this.code = "500";
+    }
+
     public String getCode() {
         return code;
     }
