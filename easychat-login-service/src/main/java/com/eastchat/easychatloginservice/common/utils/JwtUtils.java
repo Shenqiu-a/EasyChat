@@ -44,8 +44,8 @@ public class JwtUtils {
                 .compact();
     }
 
-    public String AutoRenewalToken(String OldAccessToken, String OldRefreshToken){
-        Long expirationTime = getExpirationTime(OldAccessToken);
+    public String AutoRenewalToken(String OldAccessToken, String RefreshToken){
+        Long expirationTime = getExpirationTime(RefreshToken);
         if (expirationTime - System.currentTimeMillis() < RENEWAL_TIME) {
             return JwtUtils.generateAccessToken(getUserId(OldAccessToken));
         }
