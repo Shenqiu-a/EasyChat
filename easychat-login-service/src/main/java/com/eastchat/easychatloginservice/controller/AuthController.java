@@ -2,13 +2,12 @@ package com.eastchat.easychatloginservice.controller;
 
 import com.eastchat.easychatloginservice.common.beans.PackedAssert;
 import com.eastchat.easychatloginservice.common.beans.PackedResult;
-import com.eastchat.easychatloginservice.common.enums.ErrorCode;
 import com.eastchat.easychatloginservice.common.enums.LoginErrorCode;
 import com.eastchat.easychatloginservice.common.enums.RegisterErrorCode;
 import com.eastchat.easychatloginservice.domain.request.UserLoginInfoRequest;
 import com.eastchat.easychatloginservice.domain.request.UserRegisterInfoRequest;
 import com.eastchat.easychatloginservice.domain.vo.UserBaseResponseVo;
-import com.eastchat.easychatloginservice.services.UserServices.UserService;
+import com.eastchat.easychatloginservice.services.AuthServices.AuthService;
 import com.eastchat.easychatloginservice.services.VerificationCode.VerificationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -19,13 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
-@Tag(name = "基础用户/账号服务接口")
+@Tag(name = "基础登录/认证服务接口")
 @RestController
-@RequestMapping("/api/user")
-public class UserController {
+@RequestMapping("/api/auth")
+public class AuthController {
 
     @Resource
-    UserService userService;
+    AuthService authService;
 
     @Resource
     VerificationService verificationService;
@@ -41,7 +40,7 @@ public class UserController {
         PackedAssert.isNotBlank(request.getPassword(), LoginErrorCode.USER_PASSWORD_IS_NULL);
         PackedAssert.isNotNull(request.getCaptcha(),LoginErrorCode.USER_CODE_IS_NULL);
         PackedAssert.isNotBlank(request.getCaptchaId(),LoginErrorCode.USER_CODE_ID_IS_NULL);
-        return PackedResult.success(userService.login(request));
+        return PackedResult.success(authService.login(request));
     }
 
     /**
@@ -56,6 +55,6 @@ public class UserController {
         if (request.getUsername() == null) {
             request.setUsername(accountInfo);
         }
-        return PackedResult.success(userService.register(request));
+        return PackedResult.success(authService.register(request));
     }
 }

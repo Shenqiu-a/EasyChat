@@ -1,4 +1,4 @@
-package com.eastchat.easychatloginservice.services.UserServices.Impl;
+package com.eastchat.easychatloginservice.services.AuthServices.Impl;
 
 import com.eastchat.easychatloginservice.common.Exception.BizException;
 import com.eastchat.easychatloginservice.common.beans.PackedAssert;
@@ -14,10 +14,11 @@ import com.eastchat.easychatloginservice.domain.request.UserLoginInfoRequest;
 import com.eastchat.easychatloginservice.domain.request.UserRegisterInfoRequest;
 import com.eastchat.easychatloginservice.domain.vo.UserBaseResponseVo;
 import com.eastchat.easychatloginservice.entity.UserInfoPO;
-import com.eastchat.easychatloginservice.mapper.UserInfoMapper;
-import com.eastchat.easychatloginservice.services.UserServices.UserService;
+import com.eastchat.easychatloginservice.services.AuthServices.AuthService;
 
 import java.util.*;
+
+import com.eastchat.easychatloginservice.services.UserService.UserService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -31,15 +32,15 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class UserServiceImpl implements UserService {
+public class AuthServiceImpl implements AuthService {
 
     private final String SALT = "48e29h#&TY$*(H";
 
     @Resource
-    private UserInfoMapper userInfoMapper;
+    private VerificationUtils verificationUtils;
 
     @Resource
-    private VerificationUtils verificationUtils;
+    private UserService userService;
 
     @Override
     public UserBaseResponseVo login(UserLoginInfoRequest request) {
@@ -55,10 +56,10 @@ public class UserServiceImpl implements UserService {
         // 获取用户信息 验证用户是否存在 验证密码
         UserInfoPO userInfoPO = null;
         if (cellPhoneNumber != null) {
-            userInfoPO = userInfoMapper.selectByPhone(HashUtilSha256.sha256(cellPhoneNumber + SALT));
+            userInfoPO = userService.getUserInfoByPhone(HashUtilSha256.sha256(cellPhoneNumber + SALT));
         }
         if (email != null) {
-            userInfoPO = userInfoMapper.selectByEmail(HashUtilSha256.sha256(email + SALT));
+            userInfoPO = userService.getUserInfoByEmail(HashUtilSha256.sha256(email + SALT));
         }
 
         if (userInfoPO == null) {
@@ -68,7 +69,7 @@ public class UserServiceImpl implements UserService {
             throw new BizException(LoginErrorCode.USER_PASSWORD_ERROR);
         }
 
-        // TODO 签发 Token
+        // TODO 签发 Token redis管理
         String accessToken = JwtUtils.generateAccessToken(userInfoPO.getUserId());
         String refreshToken = JwtUtils.generateRefreshToken(userInfoPO.getUserId());
         log.info("Token签发完毕");
@@ -103,7 +104,7 @@ public class UserServiceImpl implements UserService {
         String emailSha = HashUtilSha256.sha256(email + SALT);
 
         // 先查后插
-        if (userInfoMapper.selectByPhone(phoneSha) != null || userInfoMapper.selectByEmail(emailSha) != null) {
+        if (userService.getUserInfoByPhone(phoneSha) != null || userService.getUserInfoByEmail(emailSha) != null) {
             throw new BizException(RegisterErrorCode.USER_IS_EXIST);
         }
 
@@ -125,7 +126,7 @@ public class UserServiceImpl implements UserService {
         userInfoPo.setUpdateBy("root");
         userInfoPo.setUpdateTime(new Date());
         userInfoPo.setVersion("1");
-        userInfoMapper.insert(userInfoPo);
+        userService.insertUserInfo(userInfoPo);
         log.info("用户插入数据库成功\n注册成功");
         return "注册成功";
     }

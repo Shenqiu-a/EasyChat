@@ -1,4 +1,4 @@
-package com.eastchat.easychatloginservice.services.UserServices;
+package com.eastchat.easychatloginservice.services.AuthServices;
 
 import com.eastchat.easychatloginservice.domain.request.UserLoginInfoRequest;
 import com.eastchat.easychatloginservice.domain.request.UserRegisterInfoRequest;
@@ -10,7 +10,7 @@ import com.eastchat.easychatloginservice.domain.vo.UserBaseResponseVo;
  * 日期：2026/4/2815:12
  */
 
-public interface UserService {
+public interface AuthService {
     UserBaseResponseVo login(UserLoginInfoRequest request);
 
     String register(UserRegisterInfoRequest request);
