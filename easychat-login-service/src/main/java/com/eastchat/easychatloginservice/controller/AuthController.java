@@ -6,6 +6,7 @@ import com.eastchat.easychatloginservice.common.enums.LoginErrorCode;
 import com.eastchat.easychatloginservice.common.enums.RegisterErrorCode;
 import com.eastchat.easychatloginservice.domain.request.UserLoginInfoRequest;
 import com.eastchat.easychatloginservice.domain.request.UserRegisterInfoRequest;
+import com.eastchat.easychatloginservice.domain.vo.TokenVo;
 import com.eastchat.easychatloginservice.domain.vo.UserBaseResponseVo;
 import com.eastchat.easychatloginservice.services.AuthServices.AuthService;
 import com.eastchat.easychatloginservice.services.VerificationCode.VerificationService;
@@ -33,7 +34,7 @@ public class AuthController {
      * 功能：用户登录
      */
     @PostMapping("/login")
-    public PackedResult<UserBaseResponseVo> Login(@RequestBody UserLoginInfoRequest request) {
+    public PackedResult<TokenVo> Login(@RequestBody UserLoginInfoRequest request) {
         // 参数校验
         String accountInfo = request.getCellPhone() != null ? request.getCellPhone() : request.getEmail();
         PackedAssert.isNotBlank(accountInfo, LoginErrorCode.USER_ACCOUNT_IS_NULL);

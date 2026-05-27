@@ -9,13 +9,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @MapperScan("com.eastchat.easychatloginservice.mapper")
 @SpringBootApplication
-public class EasychatLoginServiceApplication {
+public class EasychatAuthServiceApplication {
     public static void main(String[] args) {
-        SpringApplication.run(EasychatLoginServiceApplication.class, args);
+        SpringApplication.run(EasychatAuthServiceApplication.class, args);
         StringBuilder sb = new StringBuilder();
         sb.append("===========================================================");
         sb.append("\n");
-        sb.append("==================== 登录注册服务启动成功! ====================");
+        sb.append("==================== 统一身份认证服务启动成功! ====================");
         sb.append("\n");
         sb.append("===========================================================");
         System.out.println(sb);

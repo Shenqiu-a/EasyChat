@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.eastchat</groupId>
-    <artifactId>easychat-login-service</artifactId>
+    <artifactId>easychat-auth-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>easychat-login-service</name>
-    <description>easychat-login-service</description>
+    <name>easychat-auth-service</name>
+    <description>easychat-auth-service</description>
     <url/>
     <licenses>
         <license/>
@@ -113,6 +113,18 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>0.12.7</version>
+        </dependency>
+
+        <!-- security -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!-- oauth2 resource -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
         </dependency>
 
     </dependencies>

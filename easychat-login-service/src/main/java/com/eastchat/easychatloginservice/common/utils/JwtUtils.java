@@ -52,7 +52,7 @@ public class JwtUtils {
         return null;
     }
 
-    public String getUserId(String oldAccessToken) {
+    public static String getUserId(String oldAccessToken) {
         try {
             return Jwts.parser()
                     .verifyWith(SECRET_KEY)
@@ -65,7 +65,7 @@ public class JwtUtils {
         }
     }
 
-    public Long getExpirationTime(String token){
+    public static Long getExpirationTime(String token){
         try {
             return Jwts.parser()
                     .verifyWith(SECRET_KEY)
