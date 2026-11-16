@@ -4,10 +4,12 @@ import com.eastchat.easychatloginservice.common.beans.PackedAssert;
 import com.eastchat.easychatloginservice.common.beans.PackedResult;
 import com.eastchat.easychatloginservice.common.enums.LoginErrorCode;
 import com.eastchat.easychatloginservice.common.enums.RegisterErrorCode;
+import com.eastchat.easychatloginservice.domain.request.UserLogOutInfoRequest;
 import com.eastchat.easychatloginservice.domain.request.UserLoginInfoRequest;
 import com.eastchat.easychatloginservice.domain.request.UserRegisterInfoRequest;
 import com.eastchat.easychatloginservice.domain.vo.TokenVo;
 import com.eastchat.easychatloginservice.domain.vo.UserBaseResponseVo;
+import com.eastchat.easychatloginservice.domain.vo.UserInfoVo;
 import com.eastchat.easychatloginservice.services.AuthServices.AuthService;
 import com.eastchat.easychatloginservice.services.VerificationCode.VerificationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,14 +29,11 @@ public class AuthController {
     @Resource
     AuthService authService;
 
-    @Resource
-    VerificationService verificationService;
-
     /**
      * 功能：用户登录
      */
     @PostMapping("/login")
-    public PackedResult<TokenVo> Login(@RequestBody UserLoginInfoRequest request) {
+    public PackedResult<UserInfoVo> Login(@RequestBody UserLoginInfoRequest request) {
         // 参数校验
         String accountInfo = request.getCellPhone() != null ? request.getCellPhone() : request.getEmail();
         PackedAssert.isNotBlank(accountInfo, LoginErrorCode.USER_ACCOUNT_IS_NULL);
@@ -57,5 +56,11 @@ public class AuthController {
             request.setUsername(accountInfo);
         }
         return PackedResult.success(authService.register(request));
+    }
+
+    @PostMapping("/logout")
+    public PackedResult<String> LogOut(@RequestBody UserLogOutInfoRequest request) {
+
+        return null;
     }
 }

@@ -4,6 +4,7 @@ import com.eastchat.easychatloginservice.domain.request.UserLoginInfoRequest;
 import com.eastchat.easychatloginservice.domain.request.UserRegisterInfoRequest;
 import com.eastchat.easychatloginservice.domain.vo.TokenVo;
 import com.eastchat.easychatloginservice.domain.vo.UserBaseResponseVo;
+import com.eastchat.easychatloginservice.domain.vo.UserInfoVo;
 
 /**
  * 功能：
@@ -12,7 +13,7 @@ import com.eastchat.easychatloginservice.domain.vo.UserBaseResponseVo;
  */
 
 public interface AuthService {
-    TokenVo login(UserLoginInfoRequest request);
+    UserInfoVo login(UserLoginInfoRequest request);
 
     String register(UserRegisterInfoRequest request);
 }

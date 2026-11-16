@@ -14,6 +14,7 @@ import com.eastchat.easychatloginservice.domain.request.UserLoginInfoRequest;
 import com.eastchat.easychatloginservice.domain.request.UserRegisterInfoRequest;
 import com.eastchat.easychatloginservice.domain.vo.TokenVo;
 import com.eastchat.easychatloginservice.domain.vo.UserBaseResponseVo;
+import com.eastchat.easychatloginservice.domain.vo.UserInfoVo;
 import com.eastchat.easychatloginservice.entity.UserInfoPO;
 import com.eastchat.easychatloginservice.services.AuthServices.AuthService;
 
@@ -44,7 +45,8 @@ public class AuthServiceImpl implements AuthService {
     private UserService userService;
 
     @Override
-    public TokenVo login(UserLoginInfoRequest request) {
+    public UserInfoVo login(UserLoginInfoRequest request) {
+        UserInfoVo result = new UserInfoVo();
         // 验证码验证
         verificationUtils.VerifyTheCaptcha(request.getCaptchaId(), request.getCaptcha(), 1);
         log.info("登录接口：验证验证码成功!");
@@ -78,7 +80,9 @@ public class AuthServiceImpl implements AuthService {
         tokenVo.setRefreshToken(refreshToken);
         tokenVo.setExpiresIn(JwtUtils.getExpirationTime(accessToken));
         log.info("Token签发完毕");
-        return tokenVo;
+        result.setTokenVo(tokenVo);
+        result.setUserInfoPO(userInfoPO);
+        return result;
     }
 
     @Override
